@@ -1,0 +1,2 @@
+application:
+  url_vector_db: resources/model/ml

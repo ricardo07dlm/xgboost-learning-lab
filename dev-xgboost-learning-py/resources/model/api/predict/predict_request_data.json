@@ -1,0 +1,35 @@
+{
+  "model_id": "xgb_model_20260224_222532",
+  "features": [
+    {
+      "client_id": "0001",
+      "edad": 24,
+      "ingresos_mensuales": 1500,
+      "antiguedad_meses": 8,
+      "incidentes_previos": 2,
+      "ratio_deuda_ingresos": 0.62,
+      "num_productos": 1,
+      "canal": "Web"
+    },
+    {
+      "client_id": "0002",
+      "edad": 47,
+      "ingresos_mensuales": 3400,
+      "antiguedad_meses": 72,
+      "incidentes_previos": 0,
+      "ratio_deuda_ingresos": 0.21,
+      "num_productos": 4,
+      "canal": "Portal"
+    },
+    {
+      "client_id": "0003",
+      "edad": 35,
+      "ingresos_mensuales": 2200,
+      "antiguedad_meses": 30,
+      "incidentes_previos": 1,
+      "ratio_deuda_ingresos": 0.41,
+      "num_productos": 3,
+      "canal": "Fisico"
+    }
+  ]
+}

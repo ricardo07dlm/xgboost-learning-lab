@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/train-request.json",
+  "title": "TrainRequest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["features", "labels"],
+  "properties": {
+    "features": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/Feature"
+      }
+    },
+    "labels": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": ["rg_bajo", "rg_alto"]
+      }
+    },
+    "params": {
+      "$ref": "#/$defs/Params"
+    }
+  },
+  "$defs": {
+    "Feature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "edad",
+        "ingresos_mensuales",
+        "antiguedad_meses",
+        "incidentes_previos",
+        "ratio_deuda_ingresos",
+        "num_productos"
+      ],
+      "properties": {
+        "edad": { "type": "integer", "minimum": 18 },
+        "ingresos_mensuales": { "type": "number", "exclusiveMinimum": 0 },
+        "antiguedad_meses": { "type": "integer", "minimum": 0 },
+        "incidentes_previos": { "type": "integer", "minimum": 0 },
+        "ratio_deuda_ingresos": { "type": "number", "minimum": 0, "maximum": 1 },
+        "num_productos": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "Params": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["n_estimators", "learning_rate", "max_depth"],
+      "properties": {
+        "n_estimators": { "type": "integer", "minimum": 1 },
+        "learning_rate": { "type": "number", "exclusiveMinimum": 0 },
+        "max_depth": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

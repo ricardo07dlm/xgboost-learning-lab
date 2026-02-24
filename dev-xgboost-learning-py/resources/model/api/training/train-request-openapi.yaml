@@ -1,0 +1,145 @@
+openapi: 3.1.0
+info:
+  title: ML Training API
+  version: "1.0.0"
+  description: API para entrenar un modelo ML recibiendo features (objetos), labels y parámetros de entrenamiento.
+
+paths:
+  /train:
+    post:
+      summary: Entrenar modelo
+      operationId: trainModel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TrainRequest"
+            examples:
+              ejemplo:
+                value:
+                  features:
+                    - edad: 45
+                      ingresos_mensuales: 3200.0
+                      antiguedad_meses: 60
+                      incidentes_previos: 0
+                      ratio_deuda_ingresos: 0.25
+                      num_productos: 3
+                    - edad: 29
+                      ingresos_mensuales: 1800.0
+                      antiguedad_meses: 12
+                      incidentes_previos: 2
+                      ratio_deuda_ingresos: 0.65
+                      num_productos: 1
+                  labels: ["rg_bajo", "rg_alto"]
+                  params:
+                    n_estimators: 200
+                    learning_rate: 0.05
+                    max_depth: 3
+      responses:
+        "200":
+          description: Entrenamiento lanzado/realizado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrainResponse"
+              examples:
+                ok:
+                  value:
+                    status: ok
+                    trained_samples: 2
+                    model_id: xgb-risk-v1-20260205-001
+
+components:
+  schemas:
+    TrainRequest:
+      type: object
+      additionalProperties: false
+      required: [features, labels]
+      properties:
+        features:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/Feature"
+          description: Lista de registros (cada uno se transformará internamente a una fila de X).
+        labels:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/Label"
+          description: Lista de etiquetas (y). Debe tener la misma longitud que features (validación a nivel aplicación).
+        params:
+          $ref: "#/components/schemas/Params"
+
+    Feature:
+      type: object
+      additionalProperties: false
+      required:
+        - edad
+        - ingresos_mensuales
+        - antiguedad_meses
+        - incidentes_previos
+        - ratio_deuda_ingresos
+        - num_productos
+      properties:
+        edad:
+          type: integer
+          minimum: 18
+          description: Edad del cliente
+        ingresos_mensuales:
+          type: number
+          exclusiveMinimum: 0
+          description: Ingresos mensuales
+        antiguedad_meses:
+          type: integer
+          minimum: 0
+          description: Antigüedad en meses
+        incidentes_previos:
+          type: integer
+          minimum: 0
+          description: Número de incidentes previos
+        ratio_deuda_ingresos:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Ratio deuda / ingresos
+        num_productos:
+          type: integer
+          minimum: 0
+          description: Número de productos contratados
+
+    Label:
+      type: string
+      enum: [rg_bajo, rg_alto]
+      description: Etiqueta de clasificación
+
+    Params:
+      type: object
+      additionalProperties: false
+      required: [n_estimators, learning_rate, max_depth]
+      properties:
+        n_estimators:
+          type: integer
+          minimum: 1
+        learning_rate:
+          type: number
+          exclusiveMinimum: 0
+        max_depth:
+          type: integer
+          minimum: 1
+
+    TrainResponse:
+      type: object
+      additionalProperties: false
+      required: [status, trained_samples, model_id]
+      properties:
+        status:
+          type: string
+          enum: [ok]
+        trained_samples:
+          type: integer
+          minimum: 0
+        model_id:
+          type: string
+          description: Identificador del modelo entrenado (o del artefacto generado)
